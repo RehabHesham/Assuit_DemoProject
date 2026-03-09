@@ -30,7 +30,8 @@ export const getAllPosts = async (req, res, next) => {
 };
 export const createPost = async (req, res, next) => {
   try {
-    const { content, tags, userId } = req.body;
+    const { content, tags } = req.body;
+    const userId = req.user._id;
     console.log(content, tags, userId);
     const post = await Post.create({
       content,
@@ -104,17 +105,13 @@ export const getAllComments = async (req, res, next) => {
 };
 export const updateComment = async (req, res, next) => {
   try {
-    const { id, cId } = req.params;
-    const { content, userId } = req.body;
+    const { cId } = req.params;
+    const { content } = req.body;
 
-    const post = await Post.findById(id);
-    if (!post) return next(new HTTPError(404, "post not found"));
+    const post = req.post;
 
     const comment = post.comments.id(cId);
     if (!comment) return next(new HTTPError(404, "comment not found"));
-
-    if (comment.user.toString() !== userId)
-      return next(new HTTPError(403, "Forbidden operation"));
 
     comment.content = content || comment.content;
     await post.save();

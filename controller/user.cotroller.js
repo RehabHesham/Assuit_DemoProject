@@ -81,7 +81,32 @@ export const updateUser = async (req, res, next) => {
 };
 
 //TODO: implement update password
-export const updatePassword = async (req, res, next) => {};
+export const updatePassword = async (req, res, next) => {
+   try {
+     // update name and email
+     const { oldPassword, newPassord } = req.body;
+     const userId = req.params.id;
+
+     
+     const user = await User.findById(id);
+     if (!user) {
+       return next(new HTTPError(404, "User not found"));
+     }
+
+     // TODO: check oldPassword is the password stored in database
+
+     // replace with newPassword
+     user.password = newPassord;
+
+     await user.save();
+     return res.status(200).json({
+       message: "user password updated",
+       user,
+     });
+   } catch (err) {
+     next(err);
+   }
+};
 
 export const deleteUser = async (req, res, next) => {
   try {

@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 // import middlewares
 import errorHandlingMW from "./middlewares/errorHandlingMW.js";
@@ -13,11 +14,12 @@ import authRouter from "./routes/auth.router.js";
 const app = express();
 
 // attach middlewares
-app.use(morgan("dev"));
-app.use(express.json()); // req.body
+app.use(morgan("dev")); // logging request in console
+app.use(express.json()); // parsing request body => req.body
+app.use(cookieParser()); // parsing cookies => req.cookies
 
 // define routes
-app.use("/api/auth",authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
